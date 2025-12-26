@@ -1,7 +1,7 @@
 {
   "homepage": "https://phoenixdevcreations.github.io/FitPlan",
   "name": "fitplan-chile",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
