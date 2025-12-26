@@ -1,7 +1,6 @@
 import { Routine, ExerciseType, DailyDiet, Recipe, NutritionRule, WeeklyRoutineMap, ShoppingCategory, KegelLevel } from './types';
 
-// Helper to generate placeholder image URL (Simulating the schematic images)
-const getImageUrl = (text: string) => `https://placehold.co/600x400/e2e8f0/1e293b?text=${encodeURIComponent(text)}`;
+
 
 // --- KEGEL CONSTANTS ---
 
@@ -13,7 +12,7 @@ export const KEGEL_LEVELS: KegelLevel[] = [
     description: 'Aprende a aislar el músculo PC. Contracciones cortas y controladas.',
     durationMinutes: 2, // 12 reps * 8s = 96s + warmup ~= 2 min
     contractTime: 3,
-    relaxTime: 5, 
+    relaxTime: 5,
     reps: 12,
     color: 'text-blue-400'
   },
@@ -34,7 +33,7 @@ export const KEGEL_LEVELS: KegelLevel[] = [
     type: 'power',
     description: 'Flickers rápidos. 1 segundo activo, 1 de descanso.',
     durationMinutes: 2, // 60 reps * 2s = 120s = 2 min
-    contractTime: 1, 
+    contractTime: 1,
     relaxTime: 1,
     reps: 60,
     color: 'text-amber-400'
@@ -76,7 +75,7 @@ export const ROUTINE_A: Routine = {
       position: 'De pie, pies al ancho de hombros.',
       execution: 'Realiza círculos amplios con los brazos hacia adelante y luego hacia atrás. 30 segundos por sentido.',
       focus: 'Movilidad articular de hombros.',
-      imageUrl: getImageUrl('Rotación Hombros')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/shoulder_rotation.png'
     },
     {
       id: 'w_a2',
@@ -84,7 +83,7 @@ export const ROUTINE_A: Routine = {
       position: 'De pie.',
       execution: 'Abre una pierna al lado y sube brazos, vuelve al centro y cambia de lado. Ritmo constante por 1 minuto.',
       focus: 'Elevación de temperatura corporal.',
-      imageUrl: getImageUrl('Jumping Jacks')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/jumping_jacks_low_impact.png'
     },
     {
       id: 'w_a3',
@@ -92,7 +91,7 @@ export const ROUTINE_A: Routine = {
       position: 'De pie.',
       execution: 'Baja las manos al suelo, camina con ellas hasta posición de plancha y vuelve atrás. Repite por 1 minuto.',
       focus: 'Activación de core y cadena posterior.',
-      imageUrl: getImageUrl('Gusano Walkouts')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/walkouts.png'
     }
   ],
   exercises: [
@@ -102,7 +101,7 @@ export const ROUTINE_A: Routine = {
       position: 'Boca arriba, piernas a 15cm del suelo.',
       execution: 'Empuja mancuernas. Baja hasta tocar suelo con tríceps.',
       focus: 'Pectoral mayor y abdomen bajo.',
-      imageUrl: getImageUrl('Press Suelo + Piernas')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/floor_press_legs.png'
     },
     {
       id: 'a2',
@@ -110,7 +109,7 @@ export const ROUTINE_A: Routine = {
       position: 'De pie con mancuernas.',
       execution: 'Sentadilla, paso atrás (plancha), vuelve, pie y Press Militar.',
       focus: 'Full Body cardio sin impacto.',
-      imageUrl: getImageUrl('Burpee Step-Back')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/burpee_press.png'
     },
     {
       id: 'a3',
@@ -118,7 +117,7 @@ export const ROUTINE_A: Routine = {
       position: 'Plancha alta sobre mancuernas.',
       execution: 'Jala mancuerna a cintura alternando brazos.',
       focus: 'Espalda y core anti-rotación.',
-      imageUrl: getImageUrl('Remo Renegado')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/renegade_row.png'
     },
     {
       id: 'a4',
@@ -126,7 +125,7 @@ export const ROUTINE_A: Routine = {
       position: 'Boca arriba, rodillas flectadas.',
       execution: 'Abre brazos semi-flexionados y cierra al centro.',
       focus: 'Aislamiento pectoral.',
-      imageUrl: getImageUrl('Aperturas Suelo')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/floor_flyes.png'
     },
     {
       id: 'a5',
@@ -134,7 +133,7 @@ export const ROUTINE_A: Routine = {
       position: 'Plancha sobre mancuernas.',
       execution: 'Rodilla al pecho lentamente apretando abdomen.',
       focus: 'Recto abdominal.',
-      imageUrl: getImageUrl('Escaladores Lentos')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/slow_mountain_climbers.png'
     }
   ]
 };
@@ -158,7 +157,7 @@ export const ROUTINE_B: Routine = {
       position: 'Manos entrelazadas.',
       execution: 'Realiza rotaciones suaves en ambos sentidos por 1 minuto. Vital para ejercicios con mancuernas.',
       focus: 'Preparación articular.',
-      imageUrl: getImageUrl('Movilidad Muñecas')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/wrist_mobility.png'
     },
     {
       id: 'w_b2',
@@ -166,7 +165,7 @@ export const ROUTINE_B: Routine = {
       position: 'De pie.',
       execution: 'Abre los brazos al máximo y crúzalos frente al pecho alternando el brazo superior. 1 minuto dinámico.',
       focus: 'Estiramiento dinámico pectoral/espalda.',
-      imageUrl: getImageUrl('Cruces Brazos')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/arm_crossovers.png'
     },
     {
       id: 'w_b3',
@@ -174,7 +173,7 @@ export const ROUTINE_B: Routine = {
       position: 'Frente a una pared, manos apoyadas.',
       execution: 'Realiza 20 flexiones controladas para activar tríceps y pecho sin fatiga excesiva.',
       focus: 'Activación muscular específica.',
-      imageUrl: getImageUrl('Flexiones Pared')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/wall_pushups.png'
     }
   ],
   exercises: [
@@ -184,7 +183,7 @@ export const ROUTINE_B: Routine = {
       position: 'De pie, mancuernas a costados.',
       execution: 'Sube girando muñeca (supinación). Baja lento.',
       focus: 'Bíceps braquial.',
-      imageUrl: getImageUrl('Curl Bíceps Giro')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/bicep_curl_twist.png'
     },
     {
       id: 'b2',
@@ -192,7 +191,7 @@ export const ROUTINE_B: Routine = {
       position: 'Boca arriba, brazos verticales.',
       execution: 'Flexiona codos llevando pesas a las orejas.',
       focus: 'Tríceps (cabeza larga).',
-      imageUrl: getImageUrl('Press Francés Suelo')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/floor_french_press.png'
     },
     {
       id: 'b3',
@@ -200,7 +199,7 @@ export const ROUTINE_B: Routine = {
       position: 'De pie, agarre neutro.',
       execution: 'Sube y baja sin girar la muñeca.',
       focus: 'Braquial anterior (grosor).',
-      imageUrl: getImageUrl('Curl Martillo')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/hammer_curl.png'
     },
     {
       id: 'b4',
@@ -208,7 +207,7 @@ export const ROUTINE_B: Routine = {
       position: 'Inclinado al frente, codos pegados.',
       execution: 'Extiende el brazo hacia atrás por completo.',
       focus: 'Tríceps (definición).',
-      imageUrl: getImageUrl('Patada Tríceps')
+      imageUrl: import.meta.env.BASE_URL + 'images/exercises/tricep_kickback.png'
     }
   ]
 };
@@ -266,7 +265,7 @@ export const DIET_W1_3: DailyDiet[] = [
     snack: { title: 'Frutos Secos', description: 'Puñado nueces o almendras.' },
     dinner: { title: 'Salpicón', description: 'Pollo/carne fría picada + lechuga + tomate + choclo + cebolla.' }
   },
-   {
+  {
     day: 'Sábado/Domingo',
     approxCalories: 2100,
     breakfast: { title: 'Libre (Controlado)', description: 'Mantiene porciones, permite 1 gusto moderado.' },
