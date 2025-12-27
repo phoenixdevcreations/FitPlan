@@ -430,18 +430,9 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
           <div className="min-h-full flex flex-col items-center justify-center p-6">
             <div className="relative text-center w-full max-w-md">
 
-              {/* Exercise Image Display */}
-              {!isRecovery && currentExercise?.imageUrl && (
-                <div className="mb-6 rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 aspect-video mx-auto w-full max-w-[300px]">
-                  <img
-                    src={currentExercise.imageUrl}
-                    alt={currentExercise.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
 
-              <h2 className="text-2xl md:text-3xl font-bold mb-2 leading-tight transition-all animate-fade-in">
+
+              <h2 className="text-xl md:text-3xl font-bold mb-1 leading-tight transition-all animate-fade-in">
                 {phaseTitle}
               </h2>
               {phaseSubtitle && <p className="text-slate-300 mb-6">{phaseSubtitle}</p>}
@@ -449,7 +440,7 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
               {/* Timer Display */}
               <div
                 onClick={toggleTimer}
-                className={`text-8xl font-mono font-bold mb-8 cursor-pointer tabular-nums tracking-tighter transition-colors select-none ${(isMetabolic || isRecovery || isWarmupPhase) && timeLeft <= 5 && isActive ? 'text-red-500 scale-110' : 'text-white'
+                className={`text-6xl md:text-8xl font-mono font-bold mb-4 cursor-pointer tabular-nums tracking-tighter transition-colors select-none ${(isMetabolic || isRecovery || isWarmupPhase) && timeLeft <= 5 && isActive ? 'text-red-500 scale-110' : 'text-white'
                   }`}
               >
                 {(isMetabolic || isRecovery || isWarmupPhase) ? formatTime(timeLeft) : formatTime(elapsedTime)}
@@ -476,54 +467,65 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
 
               {/* Instruction Card (Only during Work) */}
               {!isRecovery && (
-                <div className="bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl border border-slate-700 mb-6 text-left shadow-xl animate-fade-in-up">
-                  <div className="mb-4">
-                    <span className="text-slate-400 text-xs uppercase font-bold flex items-center gap-1 mb-1">
+                <div className="bg-slate-800/80 backdrop-blur-sm p-4 rounded-xl border border-slate-700 mb-4 text-left shadow-xl animate-fade-in-up max-h-[25vh] overflow-y-auto">
+                  <div className="mb-2">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold flex items-center gap-1 mb-0.5">
                       Posición
                     </span>
-                    <p className="text-sm md:text-base text-slate-200 leading-snug">{currentExercise?.position}</p>
+                    <p className="text-xs md:text-sm text-slate-200 leading-snug">{currentExercise?.position}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 text-xs uppercase font-bold flex items-center gap-1 mb-1">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold flex items-center gap-1 mb-0.5">
                       Ejecución
                     </span>
-                    <p className="text-sm md:text-base text-slate-200 leading-snug">{currentExercise?.execution}</p>
+                    <p className="text-xs md:text-sm text-slate-200 leading-snug">{currentExercise?.execution}</p>
                   </div>
                   {currentExercise?.detail && (
-                    <div className="mt-3 pt-3 border-t border-slate-700/50">
-                      <p className="text-xs text-amber-400 italic">💡 {currentExercise.detail}</p>
+                    <div className="mt-2 pt-2 border-t border-slate-700/50">
+                      <p className="text-[10px] text-amber-400 italic">💡 {currentExercise.detail}</p>
                     </div>
                   )}
                   {isWarmupPhase && (
-                    <div className="mt-3 pt-3 border-t border-slate-700/50">
-                      <p className="text-xs text-amber-400 italic">🔥 Calentamiento: Realiza movimientos suaves y controlados.</p>
+                    <div className="mt-2 pt-2 border-t border-slate-700/50">
+                      <p className="text-[10px] text-amber-400 italic">🔥 Calentamiento: Realiza movimientos suaves.</p>
                     </div>
                   )}
                 </div>
               )}
 
               {(isRecovery) && (
-                <div className="text-slate-300 mb-8 animate-pulse bg-slate-800/30 p-6 rounded-xl border border-white/5">
+                <div className="text-slate-300 mb-6 animate-pulse bg-slate-800/30 p-4 rounded-xl border border-white/5">
                   <p className="text-lg font-medium">¡Respira!</p>
-                  <p className="text-sm text-slate-400 mt-2">Inhala por la nariz, exhala por la boca.</p>
+                  <p className="text-xs text-slate-400 mt-1">Inhala por nariz, exhala por boca.</p>
                 </div>
               )}
 
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-8">
+              {/* Controls Container */}
+              <div className="flex items-center justify-center gap-4 mt-4 w-full">
                 <button
                   onClick={toggleTimer}
-                  className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg transition-transform transform active:scale-95 ${isActive ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-primary hover:bg-emerald-600 text-white'}`}
+                  className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg transition-transform transform active:scale-95 flex-shrink-0 ${isActive ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-primary hover:bg-emerald-600 text-white'}`}
                 >
-                  {isActive ? <Icons.Pause className="w-8 h-8 fill-current" /> : <Icons.Play className="w-8 h-8 fill-current ml-1" />}
+                  {isActive ? <Icons.Pause className="w-6 h-6 md:w-8 md:h-8 fill-current" /> : <Icons.Play className="w-6 h-6 md:w-8 md:h-8 fill-current ml-1" />}
                 </button>
+
+                {/* Exercise Image in Controls */}
+                {!isRecovery && currentExercise?.imageUrl && (
+                  <div className="h-24 md:h-32 w-auto max-w-[40%] rounded-xl overflow-hidden shadow-lg border border-white/10 bg-slate-800/50 flex-shrink-0">
+                    <img
+                      src={currentExercise.imageUrl}
+                      alt={currentExercise.name}
+                      className="h-full w-auto object-contain"
+                    />
+                  </div>
+                )}
 
                 <button
                   onClick={skipPhase}
-                  className="group flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors"
+                  className="group flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors flex-shrink-0"
                 >
-                  <div className="p-4 rounded-full bg-slate-800 group-hover:bg-slate-700 transition-colors">
-                    <Icons.Skip className="w-6 h-6" />
+                  <div className="p-3 md:p-4 rounded-full bg-slate-800 group-hover:bg-slate-700 transition-colors">
+                    <Icons.Skip className="w-5 h-5 md:w-6 md:h-6" />
                   </div>
                   <span className="text-[10px] uppercase font-bold tracking-wider">Siguiente</span>
                 </button>
@@ -538,6 +540,6 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
