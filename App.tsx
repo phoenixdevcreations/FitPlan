@@ -6,10 +6,11 @@ import { RoutineView } from './components/RoutineView';
 import { NutritionView } from './components/NutritionView';
 import { WorkoutPlayer } from './components/WorkoutPlayer';
 import { KegelView } from './components/KegelView';
+import { WaterTracker } from './components/WaterTracker';
 import { Routine, DailyPlan, Meal } from './types';
 
 // Tab Definitions
-type Tab = 'schedule' | 'nutrition' | 'kegel';
+type Tab = 'schedule' | 'nutrition' | 'kegel' | 'hydration';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('schedule');
@@ -139,10 +140,22 @@ export default function App() {
             </button>
 
             <button
+              onClick={() => { setActiveTab('hydration'); setSelectedRoutine(null); }}
+              className={`flex-1 md:flex-none flex md:flex-row flex-col items-center md:gap-3 p-2 md:px-4 md:py-3 rounded-lg transition-colors 
+                ${activeTab === 'hydration'
+                  ? 'text-blue-500 md:bg-blue-500/10'
+                  : 'hover:text-slate-600 dark:hover:text-slate-300'
+                }`}
+            >
+              <Icons.Water className="w-6 h-6 md:w-5 md:h-5" />
+              <span className="text-[10px] md:text-sm font-medium mt-1 md:mt-0">Hidratación</span>
+            </button>
+
+            <button
               onClick={() => { setActiveTab('kegel'); setSelectedRoutine(null); }}
               className={`flex-1 md:flex-none flex md:flex-row flex-col items-center md:gap-3 p-2 md:px-4 md:py-3 rounded-lg transition-colors 
                 ${activeTab === 'kegel'
-                  ? 'text-blue-400 bg-blue-500/10'
+                  ? 'text-purple-400 bg-purple-500/10'
                   : 'hover:text-slate-600 dark:hover:text-slate-300'
                 }`}
             >
@@ -201,6 +214,17 @@ export default function App() {
                 <p className="text-slate-500 dark:text-slate-400 text-sm">Estrategias, recetas y plan mensual.</p>
               </div>
               <NutritionView />
+            </div>
+          )}
+
+          {/* VIEW: HYDRATION */}
+          {activeTab === 'hydration' && (
+            <div className="space-y-6 p-4 md:p-0">
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Hidratación</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">Monitor de agua diario.</p>
+              </div>
+              <WaterTracker />
             </div>
           )}
 

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { DIET_W1_3, DIET_W2_4, RECIPES, GOLDEN_RULES, SHOPPING_LIST } from '../constants';
 import { Icons } from './Icon';
-import { WaterTracker } from './WaterTracker';
+
 
 export const NutritionView: React.FC = () => {
-  const [activeSubTab, setActiveSubTab] = useState<'plan' | 'recipes' | 'rules' | 'shopping' | 'water'>('plan');
+  const [activeSubTab, setActiveSubTab] = useState<'plan' | 'recipes' | 'rules' | 'shopping'>('plan');
   const [dietPhase, setDietPhase] = useState<1 | 2>(1); // 1 = Weeks 1&3, 2 = Weeks 2&4
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [recipeSearch, setRecipeSearch] = useState('');
@@ -65,12 +65,7 @@ export const NutritionView: React.FC = () => {
         >
           <Icons.Chef className="w-4 h-4" /> Recetas
         </button>
-        <button
-          onClick={() => setActiveSubTab('water')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeSubTab === 'water' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}
-        >
-          <Icons.Water className="w-4 h-4" /> Hidratación
-        </button>
+
         <button
           onClick={() => setActiveSubTab('rules')}
           className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeSubTab === 'rules' ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}
@@ -248,10 +243,7 @@ export const NutritionView: React.FC = () => {
         </div>
       )}
 
-      {/* CONTENT: WATER TRACKER */}
-      {activeSubTab === 'water' && (
-        <WaterTracker />
-      )}
+
 
       {/* CONTENT: RULES */}
       {activeSubTab === 'rules' && (
