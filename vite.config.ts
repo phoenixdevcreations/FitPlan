@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
           short_name: 'FitPlan',
           description: 'Tu plan de entrenamiento y nutrición personal',
           theme_color: '#10b981',
-          background_color: '#ffffff',
+          background_color: '#10b981',
           display: 'standalone',
           start_url: '/FitPlan/',
           scope: '/FitPlan/',

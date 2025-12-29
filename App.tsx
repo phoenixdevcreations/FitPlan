@@ -87,7 +87,7 @@ export default function App() {
         {/* Mobile Header */}
         <div className="md:hidden bg-slate-900 text-white p-4 sticky top-0 z-40 shadow-md flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="FitPlan Logo" className="w-8 h-8 rounded-lg" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FitPlan Logo" className="w-8 h-8 rounded-lg" />
             <h1 className="font-bold text-lg tracking-tight">FitPlan Chile</h1>
           </div>
           <button onClick={toggleTheme} className="p-2 text-slate-400 hover:text-white">
@@ -105,7 +105,7 @@ export default function App() {
           {/* Desktop Logo */}
           <div className={`hidden md:flex items-center justify-between p-6 border-b mb-4 ${activeTab === 'kegel' ? 'border-slate-800' : 'border-slate-100 dark:border-slate-800'}`}>
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="FitPlan Logo" className="w-8 h-8 rounded-lg" />
+              <img src={`${import.meta.env.BASE_URL}logo.png`} alt="FitPlan Logo" className="w-8 h-8 rounded-lg" />
               <h1 className={`font-bold text-xl tracking-tight ${activeTab === 'kegel' ? 'text-white' : 'text-slate-900 dark:text-white'}`}>FitPlan</h1>
             </div>
             <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
