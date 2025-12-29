@@ -5,9 +5,10 @@ import { Icons } from './Icon';
 interface Props {
   routine: Routine;
   onClose: () => void;
+  onNavigateToKegel?: () => void;
 }
 
-export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
+export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose, onNavigateToKegel }) => {
   const isMetabolic = routine.type === ExerciseType.METABOLIC;
 
   // Has Warmup?
@@ -74,6 +75,44 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
     };
   }, []);
 
+  // Audio Effect Ref
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  useEffect(() => {
+    // Initialize AudioContext
+    const AudioContextClass = (window.AudioContext || (window as any).webkitAudioContext);
+    if (AudioContextClass) {
+      audioContextRef.current = new AudioContextClass();
+    }
+    return () => {
+      audioContextRef.current?.close();
+    };
+  }, []);
+
+  const playBeep = (freq = 440, type: OscillatorType = 'sine', vol = 0.1) => {
+    if (!audioContextRef.current) return;
+    try {
+      if (audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume();
+      }
+      const oscillator = audioContextRef.current.createOscillator();
+      const gainNode = audioContextRef.current.createGain();
+
+      oscillator.type = type;
+      oscillator.frequency.value = freq; // Hz
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContextRef.current.destination);
+
+      gainNode.gain.setValueAtTime(vol, audioContextRef.current.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContextRef.current.currentTime + 0.5);
+
+      oscillator.start();
+      oscillator.stop(audioContextRef.current.currentTime + 0.5);
+    } catch (e) {
+      console.error("Audio error", e);
+    }
+  };
+
   // Timer Logic
   useEffect(() => {
     if (isActive) {
@@ -81,14 +120,21 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
         // Countdown Mode: Metabolic Work, All Rests, Warmups
         if (isMetabolic || isResting || isRoundRest || isWarmupPhase) {
           setTimeLeft((prev) => {
+            // Sound Effect logic for countdown (last 5 seconds)
+            if (prev <= 6 && prev > 1) { // beep at 5, 4, 3, 2, 1. (prev is about to effectively become prev-1 displayed)
+              // Simple beep
+              playBeep(800, 'sine', 0.1);
+            }
             if (prev <= 1) {
+              // Final beep different pitch
+              playBeep(1200, 'square', 0.1);
               handleTimerComplete();
               return 0;
             }
             return prev - 1;
           });
         } else {
-          // Stopwatch Mode (Hypertrophy Work)
+          // Stopwatch Mode (Hypertrophy Work) - No countdown sound
           setElapsedTime((prev) => prev + 1);
         }
       }, 1000);
@@ -283,18 +329,37 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
+  // Re-enable audio context on user interaction if suspended (browser policy)
+  const handleInteraction = () => {
+    if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+  };
+
   if (completed) {
     return (
       <div className="fixed inset-0 bg-slate-900 text-white z-50 flex flex-col items-center justify-center p-8 animate-fade-in">
         <Icons.Check className="w-24 h-24 text-emerald-500 mb-6" />
         <h2 className="text-3xl font-bold mb-2 text-center">¡Entrenamiento Completado!</h2>
         <p className="text-slate-400 text-center mb-8">Gran trabajo. Recuerda hidratarte y consumir proteína.</p>
-        <button
-          onClick={onClose}
-          className="bg-white text-slate-900 font-bold py-3 px-8 rounded-full hover:bg-slate-200 transition-colors"
-        >
-          Finalizar
-        </button>
+
+        <div className="flex flex-col gap-4 w-full max-w-xs">
+          {onNavigateToKegel && (
+            <button
+              onClick={onNavigateToKegel}
+              className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-500 transition-colors flex items-center justify-center gap-2"
+            >
+              <Icons.Activity className="w-5 h-5" />
+              Ir a Ejercicios Kegel
+            </button>
+          )}
+          <button
+            onClick={onClose}
+            className="bg-slate-700 text-white font-bold py-3 px-8 rounded-full hover:bg-slate-600 transition-colors"
+          >
+            Finalizar
+          </button>
+        </div>
       </div>
     );
   }
@@ -336,7 +401,7 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
   const headerText = isWarmupPhase ? 'CALENTAMIENTO' : (isRecovery ? 'RECUPERACIÓN' : 'TRABAJO');
 
   return (
-    <div className="fixed inset-0 bg-slate-900 text-white z-50 flex flex-col">
+    <div className="fixed inset-0 bg-slate-900 text-white z-50 flex flex-col" onClick={handleInteraction}>
       {/* Confirmation Modal */}
       {showExitConfirmation && (
         <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
@@ -427,10 +492,8 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
         <div className={`absolute w-full h-full rounded-full blur-3xl opacity-20 transition-colors duration-1000 ${isWarmupPhase ? 'bg-amber-600' : (isRecovery ? 'bg-blue-600' : isActive ? 'bg-emerald-600' : 'bg-slate-700')}`}></div>
 
         <div className="absolute inset-0 z-10 overflow-y-auto">
-          <div className="min-h-full flex flex-col items-center justify-center p-6">
-            <div className="relative text-center w-full max-w-md">
-
-
+          <div className="min-h-full flex flex-col items-center justify-center p-6 pb-20 md:pb-6">
+            <div className="relative text-center w-full max-w-md flex flex-col items-center">
 
               <h2 className="text-xl md:text-3xl font-bold mb-1 leading-tight transition-all animate-fade-in">
                 {phaseTitle}
@@ -440,7 +503,7 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
               {/* Timer Display */}
               <div
                 onClick={toggleTimer}
-                className={`text-6xl md:text-8xl font-mono font-bold mb-4 cursor-pointer tabular-nums tracking-tighter transition-colors select-none ${(isMetabolic || isRecovery || isWarmupPhase) && timeLeft <= 5 && isActive ? 'text-red-500 scale-110' : 'text-white'
+                className={`text-6xl md:text-7xl font-mono font-bold mb-6 cursor-pointer tabular-nums tracking-tighter transition-colors select-none ${(isMetabolic || isRecovery || isWarmupPhase) && timeLeft <= 5 && isActive ? 'text-red-500 scale-110' : 'text-white'
                   }`}
               >
                 {(isMetabolic || isRecovery || isWarmupPhase) ? formatTime(timeLeft) : formatTime(elapsedTime)}
@@ -465,9 +528,40 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
                 </div>
               )}
 
+              {/* Controls Container (Buttons) - Now BELOW Timer */}
+              <div className="flex items-center justify-center gap-6 mb-8 w-full">
+                <button
+                  onClick={toggleTimer}
+                  className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center shadow-lg transition-transform transform active:scale-95 flex-shrink-0 ${isActive ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-primary hover:bg-emerald-600 text-white'}`}
+                >
+                  {isActive ? <Icons.Pause className="w-8 h-8 md:w-10 md:h-10 fill-current" /> : <Icons.Play className="w-8 h-8 md:w-10 md:h-10 fill-current ml-1" />}
+                </button>
+
+                <button
+                  onClick={skipPhase}
+                  className="group flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors flex-shrink-0"
+                >
+                  <div className="p-4 rounded-full bg-slate-800 group-hover:bg-slate-700 transition-colors">
+                    <Icons.Skip className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider">Saltar</span>
+                </button>
+              </div>
+
+              {/* Exercise Image - Now BELOW Controls and Larger */}
+              {!isRecovery && currentExercise?.imageUrl && (
+                <div className="w-full max-w-[80%] md:max-w-[70%] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-800/50 mb-6 transition-all mx-auto">
+                  <img
+                    src={currentExercise.imageUrl}
+                    alt={currentExercise.name}
+                    className="w-full h-auto object-cover max-h-[40vh]"
+                  />
+                </div>
+              )}
+
               {/* Instruction Card (Only during Work) */}
               {!isRecovery && (
-                <div className="bg-slate-800/80 backdrop-blur-sm p-4 rounded-xl border border-slate-700 mb-4 text-left shadow-xl animate-fade-in-up max-h-[25vh] overflow-y-auto">
+                <div className="bg-slate-800/80 backdrop-blur-sm p-4 rounded-xl border border-slate-700 w-full text-left shadow-xl animate-fade-in-up">
                   <div className="mb-2">
                     <span className="text-slate-400 text-[10px] uppercase font-bold flex items-center gap-1 mb-0.5">
                       Posición
@@ -494,42 +588,11 @@ export const WorkoutPlayer: React.FC<Props> = ({ routine, onClose }) => {
               )}
 
               {(isRecovery) && (
-                <div className="text-slate-300 mb-6 animate-pulse bg-slate-800/30 p-4 rounded-xl border border-white/5">
+                <div className="text-slate-300 mb-6 animate-pulse bg-slate-800/30 p-4 rounded-xl border border-white/5 w-full">
                   <p className="text-lg font-medium">¡Respira!</p>
                   <p className="text-xs text-slate-400 mt-1">Inhala por nariz, exhala por boca.</p>
                 </div>
               )}
-
-              {/* Controls Container */}
-              <div className="flex items-center justify-center gap-4 mt-4 w-full">
-                <button
-                  onClick={toggleTimer}
-                  className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg transition-transform transform active:scale-95 flex-shrink-0 ${isActive ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-primary hover:bg-emerald-600 text-white'}`}
-                >
-                  {isActive ? <Icons.Pause className="w-6 h-6 md:w-8 md:h-8 fill-current" /> : <Icons.Play className="w-6 h-6 md:w-8 md:h-8 fill-current ml-1" />}
-                </button>
-
-                {/* Exercise Image in Controls */}
-                {!isRecovery && currentExercise?.imageUrl && (
-                  <div className="h-24 md:h-32 w-auto max-w-[40%] rounded-xl overflow-hidden shadow-lg border border-white/10 bg-slate-800/50 flex-shrink-0">
-                    <img
-                      src={currentExercise.imageUrl}
-                      alt={currentExercise.name}
-                      className="h-full w-auto object-contain"
-                    />
-                  </div>
-                )}
-
-                <button
-                  onClick={skipPhase}
-                  className="group flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors flex-shrink-0"
-                >
-                  <div className="p-3 md:p-4 rounded-full bg-slate-800 group-hover:bg-slate-700 transition-colors">
-                    <Icons.Skip className="w-5 h-5 md:w-6 md:h-6" />
-                  </div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider">Siguiente</span>
-                </button>
-              </div>
 
               {!isMetabolic && !isWarmupPhase && !isActive && !isRecovery && elapsedTime === 0 && (
                 <p className="mt-8 text-slate-500 text-xs uppercase tracking-wider animate-fade-in">

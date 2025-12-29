@@ -4,158 +4,154 @@ import { KEGEL_LEVELS } from '../constants';
 import { KegelLevel, KegelGoalType } from '../types';
 
 export const KegelView: React.FC = () => {
-  const [onboardingComplete, setOnboardingComplete] = useState(false);
-  const [goal, setGoal] = useState<KegelGoalType | null>(null);
-  const [activeLevel, setActiveLevel] = useState<KegelLevel | null>(null);
-  const [sessionActive, setSessionActive] = useState(false);
-  const [tutorialSeen, setTutorialSeen] = useState(false);
-  
-  // Persistence
-  useEffect(() => {
-    const savedOnboarding = localStorage.getItem('fp_kegel_onboarding');
-    const savedGoal = localStorage.getItem('fp_kegel_goal');
-    const savedTutorial = localStorage.getItem('fp_kegel_tutorial');
-    
-    if (savedOnboarding === 'true' && savedGoal) {
-      setOnboardingComplete(true);
-      setGoal(savedGoal as KegelGoalType);
-    }
-    if (savedTutorial === 'true') {
+    const [onboardingComplete, setOnboardingComplete] = useState(false);
+    const [goal, setGoal] = useState<KegelGoalType | null>(null);
+    const [activeLevel, setActiveLevel] = useState<KegelLevel | null>(null);
+    const [sessionActive, setSessionActive] = useState(false);
+    const [tutorialSeen, setTutorialSeen] = useState(false);
+
+    // Persistence
+    useEffect(() => {
+        const savedOnboarding = localStorage.getItem('fp_kegel_onboarding');
+        const savedGoal = localStorage.getItem('fp_kegel_goal');
+        const savedTutorial = localStorage.getItem('fp_kegel_tutorial');
+
+        if (savedOnboarding === 'true' && savedGoal) {
+            setOnboardingComplete(true);
+            setGoal(savedGoal as KegelGoalType);
+        }
+        if (savedTutorial === 'true') {
+            setTutorialSeen(true);
+        }
+    }, []);
+
+    const finishOnboarding = (selectedGoal: KegelGoalType) => {
+        setGoal(selectedGoal);
+        setOnboardingComplete(true);
+        localStorage.setItem('fp_kegel_onboarding', 'true');
+        localStorage.setItem('fp_kegel_goal', selectedGoal);
+    };
+
+    const startSession = (level: KegelLevel) => {
+        setActiveLevel(level);
+        setSessionActive(true);
+    };
+
+    const finishSession = () => {
+        setSessionActive(false);
+        setActiveLevel(null);
+    };
+
+    const markTutorialSeen = () => {
         setTutorialSeen(true);
+        localStorage.setItem('fp_kegel_tutorial', 'true');
+    };
+
+    if (sessionActive && activeLevel) {
+        return <KegelPlayer level={activeLevel} onComplete={finishSession} />;
     }
-  }, []);
 
-  const finishOnboarding = (selectedGoal: KegelGoalType) => {
-    setGoal(selectedGoal);
-    setOnboardingComplete(true);
-    localStorage.setItem('fp_kegel_onboarding', 'true');
-    localStorage.setItem('fp_kegel_goal', selectedGoal);
-  };
+    if (!onboardingComplete) {
+        return <OnboardingScreen onComplete={finishOnboarding} />;
+    }
 
-  const startSession = (level: KegelLevel) => {
-    setActiveLevel(level);
-    setSessionActive(true);
-  };
+    return (
+        <div className="bg-slate-900 min-h-screen text-slate-100 p-4 pb-24 md:pb-4 animate-fade-in relative overflow-hidden">
+            {/* Background Ambience */}
+            <div className="absolute top-0 left-0 w-full h-96 bg-blue-900/20 blur-[100px] pointer-events-none"></div>
 
-  const finishSession = () => {
-    setSessionActive(false);
-    setActiveLevel(null);
-  };
-  
-  const markTutorialSeen = () => {
-      setTutorialSeen(true);
-      localStorage.setItem('fp_kegel_tutorial', 'true');
-  };
-
-  if (sessionActive && activeLevel) {
-    return <KegelPlayer level={activeLevel} onComplete={finishSession} />;
-  }
-
-  if (!onboardingComplete) {
-    return <OnboardingScreen onComplete={finishOnboarding} />;
-  }
-
-  return (
-    <div className="bg-slate-900 min-h-screen text-slate-100 p-4 pb-24 md:pb-4 animate-fade-in relative overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute top-0 left-0 w-full h-96 bg-blue-900/20 blur-[100px] pointer-events-none"></div>
-      
-      {/* Header */}
-      <div className="relative z-10 flex justify-between items-center mb-8 pt-2">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">P-Trainer</h2>
-          <p className="text-slate-400 text-xs uppercase tracking-widest mt-1">Potencia & Control</p>
-        </div>
-        <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700">
-           <Icons.Trophy className="w-4 h-4 text-amber-400" />
-           <span className="text-sm font-bold">Día 4</span>
-        </div>
-      </div>
-
-      {/* Tutorial Card (If not fully mastered, keep showing small) */}
-      <div 
-        onClick={() => setTutorialSeen(false)} // Re-open tutorial
-        className="bg-slate-800/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl mb-8 flex items-center gap-4 cursor-pointer hover:bg-slate-700/80 transition-colors shadow-lg"
-      >
-         <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-             <Icons.Brain className="w-6 h-6 text-blue-400" />
-         </div>
-         <div className="flex-1">
-             <h3 className="font-bold text-slate-200 text-sm">¿Lo estoy haciendo bien?</h3>
-             <p className="text-xs text-slate-400 mt-1">Repasa la técnica de localización muscular.</p>
-         </div>
-         <Icons.ArrowRight className="w-5 h-5 text-slate-500" />
-      </div>
-
-      {/* Goal Context */}
-      <div className="mb-6">
-        <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-            Tu Objetivo: 
-            <span className="text-emerald-400 capitalize">
-                {goal === 'erection' ? 'Rigidez Máxima' : goal === 'stamina' ? 'Duración y Control' : 'Salud Integral'}
-            </span>
-        </h3>
-        <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 flex gap-3 items-start">
-             <Icons.Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
-             <p className="text-slate-400 text-sm leading-snug">
-                Elige <strong>una sola rutina</strong> para hoy. Se recomienda dominar el Nivel 1 antes de avanzar.
-             </p>
-        </div>
-      </div>
-
-      {/* Levels Grid */}
-      <div className="grid gap-4">
-        {KEGEL_LEVELS.map((level) => (
-          <button 
-            key={level.id}
-            onClick={() => {
-                if (!tutorialSeen && level.type !== 'localization') {
-                    alert("Por favor completa primero el tutorial de localización.");
-                    setTutorialSeen(false); // Force modal
-                } else {
-                    startSession(level);
-                }
-            }}
-            className="group relative overflow-hidden bg-slate-800 border border-slate-700 p-5 rounded-2xl text-left hover:border-slate-500 transition-all active:scale-[0.98]"
-          >
-            <div className={`absolute top-0 left-0 w-1 h-full ${level.color.replace('text-', 'bg-')}`}></div>
-            <div className="flex justify-between items-start mb-2">
-                <span className={`text-xs font-bold uppercase tracking-wider ${level.color}`}>
-                    {level.type === 'localization' ? 'Básico' : level.type === 'power' ? 'Avanzado' : 'Intermedio'}
-                </span>
-                <span className="text-xs text-slate-500 bg-slate-900 px-2 py-0.5 rounded flex items-center gap-1">
-                    <Icons.Clock className="w-3 h-3" /> {level.durationMinutes} min
-                </span>
+            {/* Header */}
+            <div className="relative z-10 flex justify-between items-center mb-8 pt-2">
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">P-Trainer</h2>
+                    <p className="text-slate-400 text-xs uppercase tracking-widest mt-1">Potencia & Control</p>
+                </div>
             </div>
-            <h3 className="text-xl font-bold text-slate-100 mb-1 group-hover:text-white transition-colors">{level.title}</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">{level.description}</p>
-            
-            {/* Visual Indicator of Activity Type */}
-            <div className="mt-4 flex gap-2">
-                {level.type === 'endurance' && (
-                    <div className="h-1 w-full flex gap-1">
-                        <div className="h-full w-1/2 bg-emerald-500/50 rounded-full"></div>
-                        <div className="h-full w-1/2 bg-slate-700 rounded-full"></div>
-                    </div>
-                )}
-                {level.type === 'power' && (
-                     <div className="h-1 w-full flex gap-0.5">
-                        {Array.from({length: 8}).map((_, i) => (
-                             <div key={i} className={`h-full flex-1 rounded-full ${i % 2 === 0 ? 'bg-amber-500/50' : 'bg-slate-700'}`}></div>
-                        ))}
-                    </div>
-                )}
-            </div>
-          </button>
-        ))}
-      </div>
 
-      {/* Tutorial Modal Overlay */}
-      {!tutorialSeen && (
-          <TutorialModal onComplete={markTutorialSeen} />
-      )}
-    </div>
-  );
+            {/* Tutorial Card (If not fully mastered, keep showing small) */}
+            <div
+                onClick={() => setTutorialSeen(false)} // Re-open tutorial
+                className="bg-slate-800/80 backdrop-blur-md border border-slate-700 p-5 rounded-2xl mb-8 flex items-center gap-4 cursor-pointer hover:bg-slate-700/80 transition-colors shadow-lg"
+            >
+                <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
+                    <Icons.Brain className="w-6 h-6 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                    <h3 className="font-bold text-slate-200 text-sm">¿Lo estoy haciendo bien?</h3>
+                    <p className="text-xs text-slate-400 mt-1">Repasa la técnica de localización muscular.</p>
+                </div>
+                <Icons.ArrowRight className="w-5 h-5 text-slate-500" />
+            </div>
+
+            {/* Goal Context */}
+            <div className="mb-6">
+                <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                    Tu Objetivo:
+                    <span className="text-emerald-400 capitalize">
+                        {goal === 'erection' ? 'Rigidez Máxima' : goal === 'stamina' ? 'Duración y Control' : 'Salud Integral'}
+                    </span>
+                </h3>
+                <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 flex gap-3 items-start">
+                    <Icons.Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                    <p className="text-slate-400 text-sm leading-snug">
+                        Elige <strong>una sola rutina</strong> para hoy. Se recomienda dominar el Nivel 1 antes de avanzar.
+                    </p>
+                </div>
+            </div>
+
+            {/* Levels Grid */}
+            <div className="grid gap-4">
+                {KEGEL_LEVELS.map((level) => (
+                    <button
+                        key={level.id}
+                        onClick={() => {
+                            if (!tutorialSeen && level.type !== 'localization') {
+                                alert("Por favor completa primero el tutorial de localización.");
+                                setTutorialSeen(false); // Force modal
+                            } else {
+                                startSession(level);
+                            }
+                        }}
+                        className="group relative overflow-hidden bg-slate-800 border border-slate-700 p-5 rounded-2xl text-left hover:border-slate-500 transition-all active:scale-[0.98]"
+                    >
+                        <div className={`absolute top-0 left-0 w-1 h-full ${level.color.replace('text-', 'bg-')}`}></div>
+                        <div className="flex justify-between items-start mb-2">
+                            <span className={`text-xs font-bold uppercase tracking-wider ${level.color}`}>
+                                {level.type === 'localization' ? 'Básico' : level.type === 'power' ? 'Avanzado' : 'Intermedio'}
+                            </span>
+                            <span className="text-xs text-slate-500 bg-slate-900 px-2 py-0.5 rounded flex items-center gap-1">
+                                <Icons.Clock className="w-3 h-3" /> {level.durationMinutes} min
+                            </span>
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-100 mb-1 group-hover:text-white transition-colors">{level.title}</h3>
+                        <p className="text-sm text-slate-400 leading-relaxed">{level.description}</p>
+
+                        {/* Visual Indicator of Activity Type */}
+                        <div className="mt-4 flex gap-2">
+                            {level.type === 'endurance' && (
+                                <div className="h-1 w-full flex gap-1">
+                                    <div className="h-full w-1/2 bg-emerald-500/50 rounded-full"></div>
+                                    <div className="h-full w-1/2 bg-slate-700 rounded-full"></div>
+                                </div>
+                            )}
+                            {level.type === 'power' && (
+                                <div className="h-1 w-full flex gap-0.5">
+                                    {Array.from({ length: 8 }).map((_, i) => (
+                                        <div key={i} className={`h-full flex-1 rounded-full ${i % 2 === 0 ? 'bg-amber-500/50' : 'bg-slate-700'}`}></div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </button>
+                ))}
+            </div>
+
+            {/* Tutorial Modal Overlay */}
+            {!tutorialSeen && (
+                <TutorialModal onComplete={markTutorialSeen} />
+            )}
+        </div>
+    );
 };
 
 // --- SUB-COMPONENTS ---
@@ -169,9 +165,9 @@ const OnboardingScreen: React.FC<{ onComplete: (goal: KegelGoalType) => void }> 
                 </div>
                 <h1 className="text-3xl font-bold text-center mb-2">P-Trainer</h1>
                 <p className="text-slate-400 text-center mb-10 text-lg">Optimización de rendimiento para hombres.</p>
-                
+
                 <p className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-4 text-center">¿Cuál es tu objetivo principal?</p>
-                
+
                 <div className="space-y-4">
                     <button onClick={() => onComplete('erection')} className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 p-5 rounded-xl flex items-center gap-4 transition-all group">
                         <Icons.Activity className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition-transform" />
@@ -195,7 +191,7 @@ const OnboardingScreen: React.FC<{ onComplete: (goal: KegelGoalType) => void }> 
                         </div>
                     </button>
                 </div>
-                
+
                 <p className="mt-8 text-center text-xs text-slate-500 flex items-center justify-center gap-2">
                     <Icons.Shield className="w-3 h-3" /> Privacidad Garantizada. No se comparten datos.
                 </p>
@@ -206,7 +202,7 @@ const OnboardingScreen: React.FC<{ onComplete: (goal: KegelGoalType) => void }> 
 
 const TutorialModal: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
     const [step, setStep] = useState(1);
-    
+
     return (
         <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="bg-slate-900 border border-slate-700 w-full max-w-md rounded-3xl p-6 shadow-2xl overflow-hidden relative">
@@ -232,20 +228,20 @@ const TutorialModal: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
                         </div>
                     )}
                     {step === 2 && (
-                         <div className="animate-fade-in">
+                        <div className="animate-fade-in">
                             <div className="w-32 h-32 mx-auto bg-slate-800 rounded-full flex items-center justify-center mb-6">
                                 <Icons.Wind className="w-12 h-12 text-emerald-400" />
                             </div>
                             <h3 className="text-2xl font-bold text-white mb-3">La Respiración</h3>
                             <p className="text-slate-300 mb-4">
                                 <strong>Inhala</strong> relajando el suelo pélvico (como si empujaras suavemente hacia afuera).
-                                <br/><br/>
+                                <br /><br />
                                 <strong>Exhala</strong> contrayendo y elevando el músculo hacia adentro.
                             </p>
                         </div>
                     )}
                     {step === 3 && (
-                         <div className="animate-fade-in">
+                        <div className="animate-fade-in">
                             <div className="w-32 h-32 mx-auto bg-slate-800 rounded-full flex items-center justify-center mb-6">
                                 <Icons.Zap className="w-12 h-12 text-amber-400" />
                             </div>
@@ -256,15 +252,15 @@ const TutorialModal: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
                             <p className="text-slate-300 mb-2 text-sm text-left w-full px-4">
                                 <strong className="text-white">Rápidos:</strong> Contracciones de 1s. (Potencia)
                             </p>
-                             <p className="text-slate-300 mb-4 text-sm text-left w-full px-4">
+                            <p className="text-slate-300 mb-4 text-sm text-left w-full px-4">
                                 <strong className="text-white">Reverse:</strong> Relajación profunda.
                             </p>
                         </div>
                     )}
                 </div>
-                
+
                 <div className="mt-6">
-                    <button 
+                    <button
                         onClick={() => step < 3 ? setStep(s => s + 1) : onComplete()}
                         className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-blue-900/50"
                     >
@@ -293,7 +289,7 @@ const KegelPlayer: React.FC<{ level: KegelLevel; onComplete: () => void }> = ({ 
     useEffect(() => {
         // Initial Warmup Timer
         if (phase === 'warmup') {
-             // 5s Warmup
+            // 5s Warmup
             const timer = setTimeout(() => {
                 setPhase('relax'); // Start with relax/prepare
                 setCycleTime(3);
@@ -364,20 +360,20 @@ const KegelPlayer: React.FC<{ level: KegelLevel; onComplete: () => void }> = ({ 
                     <Icons.Close className="w-6 h-6" />
                 </button>
                 <div className="text-center">
-                     <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{level.title}</span>
-                     <div className="text-xl font-mono font-bold">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</div>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{level.title}</span>
+                    <div className="text-xl font-mono font-bold">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</div>
                 </div>
                 <div className="w-10"></div>
             </div>
 
             {/* Visualizer */}
             <div className="flex-1 flex flex-col items-center justify-center relative">
-                
+
                 {/* Breathing/Visual Circle */}
                 <div className="relative w-64 h-64 flex items-center justify-center">
                     {/* Outer Glow */}
                     <div className={`absolute inset-0 rounded-full blur-[60px] transition-all duration-1000 ${isContracting ? 'bg-amber-500/30 scale-100' : 'bg-blue-500/20 scale-125'}`}></div>
-                    
+
                     {/* Ring */}
                     <div className={`w-full h-full border-4 rounded-full flex items-center justify-center transition-all duration-[2000ms] ${isContracting ? 'border-amber-500 scale-75' : 'border-blue-400/50 scale-110'}`}>
                         {/* Inner Core */}
@@ -393,17 +389,17 @@ const KegelPlayer: React.FC<{ level: KegelLevel; onComplete: () => void }> = ({ 
                         <h2 className="text-2xl font-bold text-slate-300">Prepárate...</h2>
                     ) : isContracting ? (
                         <>
-                             <h2 className="text-4xl font-bold text-amber-500 mb-2 animate-pulse">
+                            <h2 className="text-4xl font-bold text-amber-500 mb-2 animate-pulse">
                                 {isRelaxationLevel ? "EXPANDE / EMPUJA" : "CONTRAE"}
-                             </h2>
-                             <p className="text-slate-400">
+                            </h2>
+                            <p className="text-slate-400">
                                 {isRelaxationLevel ? "Inhala profundamente hacia abajo" : "Eleva hacia adentro"}
-                             </p>
+                            </p>
                         </>
                     ) : (
                         <>
-                             <h2 className="text-4xl font-bold text-blue-400 mb-2">RELAJA</h2>
-                             <p className="text-slate-400">Suelta todo</p>
+                            <h2 className="text-4xl font-bold text-blue-400 mb-2">RELAJA</h2>
+                            <p className="text-slate-400">Suelta todo</p>
                         </>
                     )}
                 </div>
@@ -416,8 +412,8 @@ const KegelPlayer: React.FC<{ level: KegelLevel; onComplete: () => void }> = ({ 
                     <span>{repsDone} / {level.reps}</span>
                 </div>
                 <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div 
-                        className="bg-blue-500 h-full transition-all duration-500" 
+                    <div
+                        className="bg-blue-500 h-full transition-all duration-500"
                         style={{ width: `${(repsDone / level.reps) * 100}%` }}
                     ></div>
                 </div>
