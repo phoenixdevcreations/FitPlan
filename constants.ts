@@ -229,7 +229,7 @@ export const DIET_W1_3: DailyDiet[] = [
     day: 'Lunes',
     approxCalories: 1850,
     breakfast: { title: 'Avena Proteica', description: '1 taza avena cocida (agua/leche desc) + canela + ½ manzana.' },
-    lunch: { title: 'Lentejas Guisadas', description: 'Con verduras (zapallo/zanahoria) + porción arroz integral + ensalada verde.' },
+    lunch: { title: 'Carne al Jugo', description: 'Posta o asiento a la olla con arroz o puré y ensalada chilena.' },
     snack: { title: 'Yogurt + Maní', description: '1 yogurt descremado + 30g maní sin sal.' },
     dinner: { title: 'Tortilla de Acelga', description: '2 huevos con acelga picada + tomate.' }
   },
@@ -237,15 +237,15 @@ export const DIET_W1_3: DailyDiet[] = [
     day: 'Martes',
     approxCalories: 1780,
     breakfast: { title: 'Tostadas con Huevo', description: '1 marraqueta (sin miga) o 2 integral + 1 huevo revuelto (min aceite).' },
-    lunch: { title: 'Croquetas de Jurel', description: 'Jurel + huevo + avena al horno. Papas cocidas y repollo.' },
+    lunch: { title: 'Croquetas de Atún', description: 'Atún + huevo + avena al horno. Papas cocidas y repollo.' },
     snack: { title: 'Fruta', description: '1 fruta estación (naranja/pera).' },
-    dinner: { title: 'Ensalada Jurel', description: 'Hojas verdes, ½ lata jurel, pepino y ¼ palta.' }
+    dinner: { title: 'Ensalada de Atún', description: 'Hojas verdes, ½ lata atún, pepino y ¼ palta.' }
   },
   {
     day: 'Miércoles',
     approxCalories: 1820,
     breakfast: { title: 'Yogurt con Avena', description: '1 yogurt + 3 cdas avena + fruta picada.' },
-    lunch: { title: 'Garbanzos Salteados', description: 'Con acelga/espinaca y cebolla + ensalada chilena.' },
+    lunch: { title: 'Zapallitos Rellenos', description: 'Rellenos con pino de carne (posta) y arroz + ensalada.' },
     snack: { title: 'Huevo Duro', description: '1 huevo duro + té/infusión.' },
     dinner: { title: 'Crema de Zapallo', description: 'Zapallo camote procesado + pollo desmenuzado encima.' }
   },
@@ -280,7 +280,7 @@ export const DIET_W2_4: DailyDiet[] = [
     day: 'Lunes',
     approxCalories: 1800,
     breakfast: { title: 'Porridge', description: 'Avena cocida caliente con leche desc. y canela.' },
-    lunch: { title: 'Porotos con Riendas', description: 'Versión liviana (zapallo/pimentón, sin longaniza) + ensalada verde.' },
+    lunch: { title: 'Cazuela de Vacuno', description: 'Caldillo con trozo de carne, papa, zapallo y choclo (sin arroz/fideos extra).' },
     snack: { title: 'Yogurt + Semillas', description: '1 yogurt + linaza/chía.' },
     dinner: { title: 'Budín Zapallo Italiano', description: 'Rallado con huevo al horno + tomate.' }
   },
@@ -288,7 +288,7 @@ export const DIET_W2_4: DailyDiet[] = [
     day: 'Martes',
     approxCalories: 1850,
     breakfast: { title: 'Pan con Palta', description: '2 rebanadas integral + 2 cdas palta.' },
-    lunch: { title: 'Estofado de Jurel', description: 'Guiso de jurel, cebolla, zanahoria y papas + salsa tomate.' },
+    lunch: { title: 'Estofado de Pollo', description: 'Trutro o pechuga, cebolla, zanahoria y papas + salsa tomate.' },
     snack: { title: 'Cítricos', description: '1 pomelo o naranja.' },
     dinner: { title: 'Pollo Plancha', description: 'Pechuga limón/orégano + brócoli/coliflor.' }
   },
@@ -298,7 +298,7 @@ export const DIET_W2_4: DailyDiet[] = [
     breakfast: { title: 'Copa Yogurt', description: 'Yogurt natural + ½ plátano + 3 nueces.' },
     lunch: { title: 'Tomaticán', description: 'Guiso carne molida magra (o soya), tomate, choclo + papas/arroz.' },
     snack: { title: 'Huevo Duro', description: '1 unidad.' },
-    dinner: { title: 'Ceviche Jurel/Atún', description: 'Lavado, con cebolla cuadritos, cilantro y limón.' }
+    dinner: { title: 'Ceviche de Atún', description: 'Lavado (si es lata), con cebolla cuadritos, cilantro y limón.' }
   },
   {
     day: 'Jueves',
@@ -329,9 +329,9 @@ export const DIET_W2_4: DailyDiet[] = [
 export const RECIPES: Recipe[] = [
   {
     id: 'r1',
-    name: 'Estofado de Jurel (Almuerzo)',
-    ingredients: ['1 tarro jurel', '1 cebolla', '1 zanahoria', '2 papas', 'Salsa tomate', 'Orégano'],
-    preparation: 'Sofreír cebolla y zanahoria. Agregar papas en bastones gruesos, agua y salsa. Al final, agregar jurel (usar jugo para sabor) y cocinar 5 min.'
+    name: 'Estofado de Pollo (Almuerzo)',
+    ingredients: ['2 trutros de pollo', '1 cebolla', '1 zanahoria', '2 papas', 'Salsa tomate', 'Orégano'],
+    preparation: 'Sofreír cebolla, zanahoria y presas de pollo (sellarlas). Agregar papas en bastones gruesos, agua y salsa. Cocinar 20-30 min tapado.'
   },
   {
     id: 'r2',
@@ -353,15 +353,15 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'r5',
-    name: 'Hamburguesas de Lentejas (Almuerzo/Cena)',
-    ingredients: ['Lentejas cocidas (sobras)', 'Zanahoria rallada', 'Cebolla picada', 'Avena (para unir)', '1 huevo'],
-    preparation: 'Moler las lentejas con tenedor (o procesadora). Mezclar con verduras sofritas, huevo y avena hasta que sea moldeable. Formar hamburguesas y dorar en sartén.'
+    name: 'Hamburguesas de Pollo (Almuerzo/Cena)',
+    ingredients: ['Carne molida de pollo (o procesada en casa)', 'Zanahoria rallada', 'Cebolla picada', 'Avena (para unir)', '1 huevo'],
+    preparation: 'Mezclar la carne de pollo con verduras sofritas, huevo y avena hasta que sea moldeable. Condimentar bien. Formar hamburguesas y dorar en sartén.'
   },
   {
     id: 'r6',
-    name: 'Boloñesa de Jurel (Almuerzo)',
-    ingredients: ['1 tarro jurel', 'Salsa de tomate', 'Cebolla', 'Zanahoria rallada', 'Fideos integrales'],
-    preparation: 'Hacer un sofrito con cebolla y zanahoria. Agregar el jurel desmenuzado y la salsa de tomate. Cocinar 5 min. Servir sobre fideos.'
+    name: 'Boloñesa de Carne (Almuerzo)',
+    ingredients: ['250g carne molida (tártaro)', 'Salsa de tomate', 'Cebolla', 'Zanahoria rallada', 'Fideos integrales'],
+    preparation: 'Hacer un sofrito con cebolla y zanahoria. Agregar la carne molida y dorar. Verter salsa de tomate. Cocinar 10 min. Servir sobre fideos.'
   },
   {
     id: 'r7',
@@ -404,9 +404,9 @@ export const RECIPES: Recipe[] = [
 export const GOLDEN_RULES: NutritionRule[] = [
   { title: 'Porciones (La Mano)', content: 'Usa tu mano para medir: Proteína = Palma. Carbohidratos (Arroz/Fideo) = Puño cerrado frontal. Verduras = 2 manos abiertas juntas. Grasas = Dedo pulgar.' },
   { title: 'Hidratación Estratégica', content: 'Bebe un vaso grande de agua 15 minutos antes de cada comida. Esto mejora la digestión y aumenta la saciedad, ayudando a controlar porciones.' },
-  { title: 'Compras Inteligentes', content: 'Prefiere Feria libre para frutas/verduras. Compra Jurel en conserva en vez de Atún (tiene más Omega-3 y es más barato). Compra legumbres secas a granel, rinden el triple.' },
+  { title: 'Compras Inteligentes', content: 'Prefiere Feria libre para frutas/verduras. Compra Atún en conserva (fácil y versátil). Compra pollo entero y troza (es más barato que bandejas).' },
   { title: 'Horarios de Comidas', content: 'Intenta comer cada 3-4 horas para mantener el metabolismo activo y evitar atracones. Desayuno 08:00 | Almuerzo 13:30 | Once 17:30 | Cena 20:30 (Ligera).' },
-  { title: 'Batch Cooking (Cocinar por lotes)', content: 'Dedica el Domingo o Lunes a cocinar legumbres y carbohidratos para 3 días. Refrigerar en potes de vidrio ahorra tiempo y evita pedir comida rápida.' },
+  { title: 'Batch Cooking (Cocinar por lotes)', content: 'Dedica el Domingo o Lunes a cocinar carbohidratos (arroz/quinoa) y proteínas (pollo/carne) para 3 días. Refrigerar en potes ahorra tiempo.' },
   { title: 'Regla del 80/20', content: 'El 80% de tu alimentación debe ser nutritiva y planificada. El 20% puede ser flexible (una comida libre el fin de semana). Esto asegura adherencia a largo plazo.' }
 ];
 
@@ -435,11 +435,11 @@ export const SHOPPING_LIST: ShoppingCategory[] = [
     category: 'Carnicería / Proteínas (Mensual/Quincenal)',
     items: [
       'Huevos (Bandeja 30 un)',
-      'Jurel en conserva (4-6 latas)',
-      'Pechuga o Trutro de Pollo',
+      'Atún en conserva (4-6 latas)',
+      'Pechuga, Trutro o Pollo entero',
       'Carne Molida (Baja grasa / Tártaro)',
       'Quesillo / Queso Fresco',
-      'Jamón de Pavo (Opcional)'
+      'Posta Negra/Rosada (Trozo)'
     ]
   },
   {
@@ -448,9 +448,9 @@ export const SHOPPING_LIST: ShoppingCategory[] = [
       'Avena Instantánea o Tradicional (1 Kg)',
       'Arroz Integral',
       'Fideos Integrales',
-      'Lentejas (Bolsa)',
-      'Porotos (Bolsa)',
-      'Garbanzos (Bolsa)',
+      'Quinoa (Opcional)',
+      'Harina Integral',
+      'Sémola (Opcional)',
       'Maní sin sal / Nueces',
       'Salsa de Tomate',
       'Aceite',
